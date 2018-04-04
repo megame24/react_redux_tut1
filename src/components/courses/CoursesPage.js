@@ -1,25 +1,16 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { createCourse } from '../../actions/courseAction';
+import { createCourse, loadCourses } from '../../actions/courseAction';
+import CourseList from './CourseList';
 
 class CoursesPage extends Component {
 
     constructor(props, context) {
         super(props, context);
-
-        this.state = {
-            title: ''
-        };
-        this.onTitleChange = this.onTitleChange.bind(this);
-        this.onClickSave = this.onClickSave.bind(this);
     }
 
-    onTitleChange(event) {
-        this.setState({title: event.target.value});
-    }
-
-    onClickSave() {
-        this.props.createCourse(this.state);
+    componentWillMount() {
+        this.props.loadCourses();
     }
 
     courseRow(course, index) {
@@ -27,19 +18,11 @@ class CoursesPage extends Component {
     }
 
     render() {
+        const {courses} = this.props;
         return (
             <div>
                 <h1>courses</h1>
-                {this.props.courses.map(this.courseRow)}
-                <h2>Add course</h2>
-                <input
-                    type="text"
-                    onChange={this.onTitleChange}
-                    value={this.state.title} />
-                <input
-                    type="submit"
-                    value="save"
-                    onClick={this.onClickSave} />
+                <CourseList courses={courses} />
             </div>
         );
     }
@@ -47,7 +30,8 @@ class CoursesPage extends Component {
 
 CoursesPage.propTypes = {
     courses: PropTypes.array.isRequired,
-    createCourse: PropTypes.func.isRequired
+    createCourse: PropTypes.func.isRequired,
+    loadCourses: PropTypes.array.isRequired
 };
 
 function mapStateToProps(state, ownProps) {
@@ -57,4 +41,4 @@ function mapStateToProps(state, ownProps) {
     };
 }
 
-export default connect(mapStateToProps, { createCourse })(CoursesPage);
+export default connect(mapStateToProps, { createCourse, loadCourses })(CoursesPage);
