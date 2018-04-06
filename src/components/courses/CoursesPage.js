@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { createCourse, loadCourses } from '../../actions/courseAction';
 import CourseList from './CourseList';
+import { browserHistory } from 'react-router';
 
 class CoursesPage extends Component {
 
@@ -9,12 +9,17 @@ class CoursesPage extends Component {
         super(props, context);
     }
 
-    componentWillMount() {
-        this.props.loadCourses();
-    }
+    /*by moving this to the index.js, we disable it from loading every time this component re-renders*/
+    // componentWillMount() {
+    //     this.props.loadCourses();
+    // }
 
     courseRow(course, index) {
         return <div key={index}>{course.title}</div>;
+    }
+
+    redirectToAddCoursePage() {
+        browserHistory.push('/course');
     }
 
     render() {
@@ -22,6 +27,11 @@ class CoursesPage extends Component {
         return (
             <div>
                 <h1>courses</h1>
+                <input 
+                    type="submit"
+                    value="Add Course"
+                    className="btn btn-primary"
+                    onClick={this.redirectToAddCoursePage} />
                 <CourseList courses={courses} />
             </div>
         );
@@ -29,9 +39,7 @@ class CoursesPage extends Component {
 }
 
 CoursesPage.propTypes = {
-    courses: PropTypes.array.isRequired,
-    createCourse: PropTypes.func.isRequired,
-    loadCourses: PropTypes.array.isRequired
+    courses: PropTypes.array.isRequired
 };
 
 function mapStateToProps(state, ownProps) {
@@ -41,4 +49,4 @@ function mapStateToProps(state, ownProps) {
     };
 }
 
-export default connect(mapStateToProps, { createCourse, loadCourses })(CoursesPage);
+export default connect(mapStateToProps)(CoursesPage);
